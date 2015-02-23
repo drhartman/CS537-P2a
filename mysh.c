@@ -266,6 +266,10 @@ int main (void)
 							}
 							else 
 							{
+								// parent must close both ends of pipe
+								close(pipefd[0]);
+								close(pipefd[1]);
+								
 								//printf("parent\n");
 								// wait until child process is terminated
 								if (wait(NULL) == -1)
@@ -276,8 +280,8 @@ int main (void)
 			
 							}
 					
-					
-				
+							
+							
 						} // end parent pipe
 				
 				
@@ -298,14 +302,14 @@ int main (void)
 							// overwrite redirection
 							if (overwriteRed)
 							{
-								printf("overwriteRed\n");
+								//printf("overwriteRed\n");
 					
-								printf("%s\n", args[indexRed]);
+								//printf("%s\n", args[indexRed]);
 					
 								int ovrRedFile = open(args[indexRed], 
 								O_TRUNC|O_CREAT|O_RDWR, S_IRWXU);
 					
-								printf("%d\n", ovrRedFile);
+								//printf("%d\n", ovrRedFile);
 					
 								//int dup = 
 								if (dup2(ovrRedFile, 1) < 0)
@@ -325,14 +329,14 @@ int main (void)
 							// append redirection
 							if (appendRed)
 							{
-								printf("appendRed\n");
+								//printf("appendRed\n");
 				
-								printf("%s\n", args[indexAppend]);
+								//printf("%s\n", args[indexAppend]);
 					
 								int ovrAppFile = open(args[indexAppend], 
 								O_APPEND|O_CREAT|O_RDWR, S_IRWXU);
 					
-								printf("%d\n", ovrAppFile);
+								//printf("%d\n", ovrAppFile);
 					
 								//int dup = 
 								if (dup2(ovrAppFile, 1) < 0)
@@ -373,7 +377,7 @@ int main (void)
 								perror("wait");
 								fprintf(stderr, "Error!\n");
 							}
-			
+							
 						}
 			
 					} // end not pipe
