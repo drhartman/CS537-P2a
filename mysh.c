@@ -16,7 +16,7 @@
 // char *strtok(char *str, const char *delim)
 
 //   printf("here \n");
- 
+
 int main (void)
 {
 	char* command;
@@ -61,6 +61,8 @@ int main (void)
 		{
 			//errorMes = "getline";
 			perror("getline");
+			fprintf(stderr, "Error!\n");
+			
 		}
 		
 		// validate input
@@ -133,7 +135,7 @@ int main (void)
 					if (argsNum > 1)
 					{
 						//TODO: uhhh don't print this?
-						//perror("exit");
+						perror("exit");
 						fprintf(stderr, "Error!\n");
 					}
 					else
@@ -170,13 +172,10 @@ int main (void)
 
 
 				// if not a command above, is it a prog??
-				// if it is a prog, it must have more than 1 arg
-				} else if (argsNum > 1 || (strcmp("ls", args[0]) == 0))
+				} else if (argsNum > 0)  // || (strcmp("ls", args[0]) == 0))
 					{
 					int pid;
-				
-						
-				
+
 					// for pipes, create each proc from mysh
 					if (pipeBool)
 					{
@@ -184,6 +183,7 @@ int main (void)
 						if (pipe(pipefd) == -1)
 						{
 							perror("pipe");
+							fprintf(stderr, "Error!\n");
 						}
 				
 						//fork for first prog
@@ -198,6 +198,7 @@ int main (void)
 							if (dup2(pipefd[1], 1) < 0)
 							{
 								perror("pipe dup");
+								fprintf(stderr, "Error!\n");
 							}
 					
 							// remove '|' from args
@@ -227,6 +228,7 @@ int main (void)
 							if (wait(NULL) == -1)
 							{
 								perror("wait");
+								fprintf(stderr, "Error!\n");
 							}
 					
 							//fork for 2nd prog
@@ -241,6 +243,7 @@ int main (void)
 								if (dup2(pipefd[0], 0) < 0)
 								{
 									perror("pipe dup");
+									fprintf(stderr, "Error!\n");
 								}
 					
 								int args2Index = 0;
@@ -268,6 +271,7 @@ int main (void)
 								if (wait(NULL) == -1)
 								{
 									perror("wait");
+									fprintf(stderr, "Error!\n");
 								}
 			
 							}
@@ -307,6 +311,7 @@ int main (void)
 								if (dup2(ovrRedFile, 1) < 0)
 								{
 									perror("dup ovr");
+									fprintf(stderr, "Error!\n");
 								}
 								//close(1);
 					
@@ -333,6 +338,7 @@ int main (void)
 								if (dup2(ovrAppFile, 1) < 0)
 								{
 									perror("dup app");
+									fprintf(stderr, "Error!\n");
 								}
 								//close(1);
 					
@@ -349,6 +355,7 @@ int main (void)
 							if (execvp(args[0], args) == -1)
 							{
 								perror("exec");
+								fprintf(stderr, "Error!\n");
 								//should not return after exec
 								//printf("should not get here, ERROR");
 								kill(getpid(), SIGKILL);
@@ -364,6 +371,7 @@ int main (void)
 							if (wait(NULL) == -1)
 							{
 								perror("wait");
+								fprintf(stderr, "Error!\n");
 							}
 			
 						}
@@ -375,7 +383,7 @@ int main (void)
 				// if not a prog, then ERROR
 				{
 				//TODO: uhhh don't print this?
-				//perror("exit");
+				perror("exit");
 				fprintf(stderr, "Error!\n");
 
 				}
